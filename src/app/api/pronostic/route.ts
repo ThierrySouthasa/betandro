@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from "../../../generated/prisma";
+import { supabase, Pronostic } from '../../../lib/supabase';
 import { z } from 'zod';
-
-const prisma = new PrismaClient();
 
 // Validation Zod pour sécuriser les entrées
 const pronosticSchema = z.object({
@@ -30,9 +28,15 @@ export async function POST(req: Request) {
 
         const data = validation.data;
 
-        const pronostic = await prisma.pronostic.create({
-            data,
-        });
+        const { data: pronostic, error } = await supabase
+            .from('Pronostic')
+            .insert(data)
+            .select()
+            .single();
+
+        if (error) {
+            throw error;
+        }
 
         return NextResponse.json(pronostic, { status: 201 });
     } catch (err) {
@@ -51,23 +55,15 @@ export async function GET(req: Request) {
         const take = takeParam ? Math.min(Math.max(parseInt(takeParam, 10) || 0, 0), 100) : 50;
         const skip = skipParam ? Math.max(parseInt(skipParam, 10) || 0, 0) : 0;
 
-        const pronostics = await prisma.pronostic.findMany({
-            take,
-            skip,
-            orderBy: { createdAt: 'desc' },
-            select: {
-                id: true,
-                sport: true,
-                teamA: true,
-                teamB: true,
-                odds: true,
-                prediction: true,
-                result: true,
-                visibleTo: true,
-                createdAt: true,
-                updatedAt: true,
-            },
-        });
+        const { data: pronostics, error } = await supabase
+            .from('Pronostic')
+            .select('id, sport, teamA, teamB, odds, prediction, result, visibleTo, createdAt, updatedAt')
+            .order('createdAt', { ascending: false })
+            .range(skip, skip + take - 1);
+
+        if (error) {
+            throw error;
+        }
 
         return NextResponse.json(pronostics);
     } catch (err) {
@@ -91,10 +87,17 @@ export async function PATCH(req: Request) {
             return NextResponse.json({ error: 'Validation error', issues: validation.error.issues }, { status: 400 });
         }
         const { id, result } = validation.data;
-        const updated = await prisma.pronostic.update({
-            where: { id },
-            data: { result },
-        });
+        const { data: updated, error } = await supabase
+            .from('Pronostic')
+            .update({ result })
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) {
+            throw error;
+        }
+
         return NextResponse.json(updated, { status: 200 });
     } catch (err) {
         console.error('Erreur lors de la mise à jour du pronostic :', err);

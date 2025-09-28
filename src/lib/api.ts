@@ -1,15 +1,4 @@
-export type Pronostic = {
-    id: number;
-    sport: 'FOOTBALL' | 'TENNIS' | 'BASKET';
-    teamA: string;
-    teamB: string;
-    odds: number;
-    prediction: string;
-    result: 'PENDING' | 'WON' | 'LOST';
-    visibleTo: 'FREE' | 'BASIC' | 'PREMIUM';
-    createdAt: string;
-    updatedAt: string;
-};
+import { Pronostic } from './supabase';
 
 export async function fetchPronostics(params?: { take?: number; skip?: number }): Promise<Pronostic[]> {
     const query = new URLSearchParams();
