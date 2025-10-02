@@ -1,29 +1,61 @@
+import { FaFutbol } from 'react-icons/fa';
+
 interface PronosticCardProps {
-    equipe1: string;
-    equipe2: string;
-    score: string;
-    cote: number;
-    pronostic: string;
+  equipe1: string;
+  equipe2: string;
+  cote: number;
+  pronostic: string;
+  result: string;
 }
 
 export default function PronosticCard({
-                                          equipe1,
-                                          equipe2,
-                                          score,
-                                          cote,
-                                          pronostic,
-                                      }: PronosticCardProps) {
-    return (
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
-            <div className="flex justify-between items-center mb-3">
-                <span className="text-gray-700 font-medium">{equipe1}</span>
-                <span className="text-red-500 font-bold text-lg">{score}</span>
-                <span className="text-gray-700 font-medium">{equipe2}</span>
-            </div>
-            <div className="text-sm text-gray-500 flex justify-between">
-                <span>Cote : <strong className="text-gray-700">{cote}</strong></span>
-                <span>Pronostic : <strong className="text-red-500">{pronostic}</strong></span>
-            </div>
+  equipe1,
+  equipe2,
+  cote,
+  pronostic,
+  result,
+}: PronosticCardProps) {
+  const borderColor =
+    result === 'WON' ? 'border-green-500'
+      : result === 'LOST'
+      ? 'border-red-500'
+      : 'border-blue-500';
+
+  return (
+    <div className="w-[300px] bg-gradient-to-r from-black to-gray-800 border border-gray-700 rounded-xl shadow-sm p-4 space-y-4">
+      <div className="text-left pl-2">
+        <span className="text-gray-300 font-semibold text-sm">{result}</span>
+      </div>
+
+      <div className={`w-[95%] mx-auto border-t ${borderColor}`}></div>
+
+      <div className="flex items-center justify-between">
+        <div className="w-[40px] flex items-center justify-end pr-3">
+          <FaFutbol className="w-5 h-5 text-gray-300" />
         </div>
-    );
+
+        <div className="h-6 w-px bg-gray-700 mx-2"></div>
+
+        <div className="flex-1 pl-2 flex flex-col items-start">
+          <span className="text-gray-300 text-sm">{equipe1}</span>
+          <span className="text-gray-300 text-sm">{equipe2}</span>
+        </div>
+
+        <div className="h-6 w-px bg-gray-700 mx-2"></div>
+
+        <div className="flex flex-col items-center px-2">
+          <span className="text-gray-300 text-sm">Cote</span>
+          <strong className="text-white text-sm">{cote}</strong>
+        </div>
+      </div>
+
+      <div className={`w-[95%] mx-auto border-t ${borderColor}`}></div>
+
+      <div className="text-center">
+        <span className="text-gray-300 text-sm">
+          Pronostic : <strong className="text-orange-500">{pronostic}</strong>
+        </span>
+      </div>
+    </div>
+  );
 }
