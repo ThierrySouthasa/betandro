@@ -22,7 +22,7 @@ export default function PlayerPage() {
                         equipe1={p.teamA}
                         equipe2={p.teamB}
                         cote={p.odds}
-                        pronostic={p.prediction}
+                        result={p.prediction}
                     />
                 ))}
             </div>

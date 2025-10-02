@@ -4,8 +4,9 @@ interface PronosticCardProps {
   equipe1: string;
   equipe2: string;
   cote: number;
-  pronostic: string;
-  result: string;
+  pronostic?: string;
+  result?: string;
+  prediction?: string;
 }
 
 export default function PronosticCard({
@@ -14,6 +15,7 @@ export default function PronosticCard({
   cote,
   pronostic,
   result,
+  prediction,
 }: PronosticCardProps) {
   const borderColor =
     result === 'WON' ? 'border-green-500'
@@ -52,9 +54,18 @@ export default function PronosticCard({
       <div className={`w-[95%] mx-auto border-t ${borderColor}`}></div>
 
       <div className="text-center">
-        <span className="text-gray-300 text-sm">
-          Pronostic : <strong className="text-orange-500">{pronostic}</strong>
-        </span>
+      <span className="text-gray-300 text-sm">
+  {pronostic ? (
+    <>
+      Pronostic : <strong className="text-orange-500">{pronostic}</strong>
+    </>
+  ) : (
+    <>
+      Pari : <strong className="text-orange-500">{prediction}</strong>
+    </>
+  )}
+</span>
+
       </div>
     </div>
   );
