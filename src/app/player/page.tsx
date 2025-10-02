@@ -21,7 +21,6 @@ export default function PlayerPage() {
                         key={p.id}
                         equipe1={p.teamA}
                         equipe2={p.teamB}
-                        score=""
                         cote={p.odds}
                         pronostic={p.prediction}
                     />
